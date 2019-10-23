@@ -1,8 +1,6 @@
 package com.mainacad.service;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 
 public class FileService {
 
@@ -13,19 +11,15 @@ public class FileService {
     //work with text
     public static void writeTextToFile(String text, String fileName) {
         checkTargeDir();
-        FileWriter fileWriter = null;
-        try {
+
+        try(FileWriter fileWriter = null;) {
             fileWriter  = new FileWriter(FILES_DIR + SEP + fileName);
             fileWriter.write(text);
             fileWriter.flush();
         } catch (IOException e) {
             e.printStackTrace();
-        } finally{
-            try {
-                fileWriter.close();
-            } catch (IOException e){
-                e.printStackTrace();
-            }
+        }
+
         }
     }
 
@@ -38,6 +32,17 @@ public class FileService {
 
     public static String readTextFromFile(String fileName) {
         String out = "";
+        try (       FileReader fileReader = new FileReader(FILES_DIR + SEP+ fileName);
+                    BufferedReader bufferedReader = new BufferedReader(fileReader)
+            ) {
+            String line;
+            while ((line = bufferedReader.readLine()) != null)
+            {
+                out += line + "\n";
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
 
         return out;
 
