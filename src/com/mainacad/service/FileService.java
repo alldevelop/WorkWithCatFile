@@ -12,25 +12,16 @@ public class FileService {
     public static void writeTextToFile(String text, String fileName) {
         checkTargetDir();
 
-        FileWriter fileWriter = null; // для того, чтобы мы могли использовать его в блое finally
-        try {
-            fileWriter = new FileWriter(FILES_DIR + SEP + fileName);
+        // для того, чтобы мы могли использовать его в блое finally
+        try (FileWriter fileWriter = new FileWriter(FILES_DIR + SEP + fileName)) {
             fileWriter.write(text);
             fileWriter.flush(); // осуществляет выталкивание текста в сам файл
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {
-            try {
-                fileWriter.close(); //таким образом мы закрываем подключение к нашему файлу
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         }
         //FileWriter механизм позиционирования на файл с целью его дальнейшего наполнения
         // FileWriter нужно обработать (try catch);
-
-
-}
+    }
 
     private static void checkTargetDir() { //помогает управлять путями к файлу и обработкой файлов
         File file = new File(FILES_DIR); // позиционирование на нашу директорию
@@ -39,10 +30,24 @@ public class FileService {
         }
     }
 
-    public static String writeTextToFile(String fileName) {
+    public static String readTextFromFile(String fileName) {
 
         String out = "";
+
+        try (FileReader fileReader = new FileReader(FILES_DIR + SEP + fileName);
+             BufferedReader bufferedReader = new BufferedReader(fileReader)
+        ) {
+
+            String line;
+            while ( (line = bufferedReader.readLine()) != null ) { //необходимо представить, что есть файл, в котором куча строк, здесь в  BufferedReader
+                out += line + "\n";                          // загнали все эти строки и мы будем считывать строку при каждом считывании смещение курсора будет происходить на след строчку
+            }                                                //пока не дойдем до null
+        } catch (IOException e) { // в итоге мы сформировали два объекта, первый - это наш FileReader, он нам нужен для того, чтобы спозиционироваться на файл
+            e.printStackTrace(); // и второй BufferedReader нам нужен для того, чтобы скачать из FileReadera как из пневмопочты
+
+
+        }
+
         return out;
     }
 }
-
