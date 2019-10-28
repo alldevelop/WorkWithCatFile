@@ -10,12 +10,18 @@ public class ApplicationRunner {
 
     public static void main(String[] args) {
 
-        FileService.copyFile("cat.jpg", "cat_copy.jpg");
+        FileService.copyFile("cat.jpg","cat_copy.jpg");
+        /*  String text = "Some new text \n I wanted to be written\n";
+        FileService.writeTextToFile(text,"test.txt", false);
+        String inputText =
+                FileService.readTextFromFile("test.txt");
+        LOGGER.info("\n" + inputText);
+        /*FileService.copyFile("cat.jpg", "cat_copy.jpg");*/
               /*  String text = "some new text \n I wanted to be written\n";
-        FileService.writeTextToFile(text,"test.txt");
+
         String inputText =
                 FileService.readTextFromFile("test txt");
-        LOGGER.info("\n" + inputText);*/
+        */
     }
 
 }

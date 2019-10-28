@@ -9,7 +9,7 @@ public class FileService {
     public static final String FILES_DIR = MAIN_DIR + SEP + "files";
 
     //work with text
-    public static void writeTextToFile(String text, String fileName) {
+    public static void writeTextToFile(String text, String fileName, boolean append) {
         checkTargetDir();
 
         // для того, чтобы мы могли использовать его в блое finally
@@ -49,5 +49,33 @@ public class FileService {
         }
 
         return out;
+    }
+    //work with bytes
+    public static void writeBytesToFile(byte[] bytes, String fileName) {
+        checkTargetDir();
+
+        try (FileOutputStream fileOutputStream =
+                     new FileOutputStream(FILES_DIR + SEP + fileName)) {
+            fileOutputStream.write(bytes);
+            fileOutputStream.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static byte [] getBytesFromFile(String fileName) {
+          File file = new File(FILES_DIR + SEP + fileName);
+
+        try {
+            return Files.readAllBytes(file.toPath());// преобразовать к абсолютному пути
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return new byte[0];
+    }
+
+    public static void copyFile(String sourceName, String targetName) {
+        byte[] bytes  = getBytesFromFile(sourceName);
+        writeBytesToFile(bytes, targetName);
     }
 }
